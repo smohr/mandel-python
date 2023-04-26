@@ -23,13 +23,13 @@ Before installing requirements for the application, you may want to create a vir
 +
 [source,bash]
 ----
-python -m venv .venv
+python -m venv .venv --prompt mandelbrot
 
 # On Windows:
 .venv\Scripts\activate.bat
 
 # On Linux or FreeBSD:
-source .venv/bin/activate
+source .venv/mandelbrot/bin/activate
 ----
 +
 After that you can install the required dependencies using `pip`:
