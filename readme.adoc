@@ -62,7 +62,7 @@ To build and run the application using Podman, follow these steps:
 podman build -t mandelbrot-service .
 ----
 +
-This command will build the container image using the `Containerfile` or `Dockerfile` in the current directory and tag it as `mandelbrot-service`.
+This command will build the container image using the `Containerfile` in the current directory and tag it as `mandelbrot-service`.
 
 . Run the container using Podman. Replace `<port>` with the desired port number on your local machine, which will be mapped to the internal container port:
 +
