@@ -1,1 +1,1 @@
-from .mandelbrot import MandelSet, mandel
+from .mandelbrot import MandelSet, mandel, mandel_ascii

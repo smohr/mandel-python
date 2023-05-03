@@ -1,4 +1,8 @@
+import numpy as np
 from dataclasses import dataclass
+from io import BytesIO
+
+characters = [' ', '.', '+', '=', '?', '#', ':', '*']
 
 x_min, x_max = -2.0, 1.0
 y_min, y_max = -1.5, 1.5
@@ -15,33 +19,40 @@ def mandelbrot_set(c: complex, max_iter: int) -> int:
         n += 1
     return n
 
-def mandel(max_iter: int, height: int, width:int) -> MandelSet:
-    x_step = (x_max - x_min) / width
-    y_step = (y_max - y_min) / height
+def mandelbrot_set_numpy(c: np.ndarray, max_iter: int) -> np.ndarray:
+    z = np.zeros_like(c, dtype=np.complex128)
+    result = np.zeros_like(c, dtype=int)
+    mask = np.full_like(c, True, dtype=bool)
 
+    for n in range(max_iter):
+        z[mask] = z[mask] * z[mask] + c[mask]
+        mask = np.abs(z) < 2
+        result[mask] = n
+
+    return result
+
+def mandel(max_iter: int, height: int, width:int):
+    x = np.linspace(x_min, x_max, width)
+    y = np.linspace(y_min, y_max, height)
+    x, y = np.meshgrid(x, y)
+    c = x + 1j * y
+
+    result = mandelbrot_set_numpy(c, max_iter)
+
+    return result
+
+def mandel_ascii(max_iter: int, height: int, width:int) -> MandelSet:
     def pixel_character(n: int) -> str:
-        if n <= 10:
-            return ' '
-        if n <= 20:
-            return '.'
-        if n <= 30:
-            return '+'
-        if n <= 40:
-            return '='
-        if n <= 50:
-            return '?'
-        if n <= 60:
-            return '#'
-        if n <= 70:
-            return ':'
-        return '*'
+        return characters[min(n // 10, len(characters) - 1)]
 
-    result = ''.join(
+    result = mandel(max_iter, height, width)
+
+    result_str = ''.join(
         ''.join(
-            pixel_character(mandelbrot_set(complex(x_min + x_step * x, y_min + y_step * y), max_iter))
-            for x in range(width)
+            pixel_character(result[i, j])
+            for j in range(width)
         ) + '\n'
-        for y in range(height)
+        for i in range(height)
     )
 
-    return MandelSet(result)
+    return MandelSet(result_str)
